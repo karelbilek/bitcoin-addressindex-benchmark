@@ -15,19 +15,19 @@ def f(line):
   txids = rpc_connection.getaddresstxids(line);
   for idd in txids:
     rpc_connection.getrawtransaction(idd)
-
+  return len(txids)
 
 i = 0
 while True:
-  mychunk = chunk(lines, 1000, i)
+  mychunk = chunk(lines, 100, i)
   i+1
 
   start = time.time()
-  pool = Pool(processes=4)              # start 4 worker processes
-  pool.map(f, mychunk)
+  pool = Pool(processes=40)              # start 40 worker processes
+  all = sum(pool.map(f, mychunk))
 
   end = time.time()
   sec = (end - start)
-  persec = float(len(mychunk))/sec
-  print(persec)
+  persec = float(all)/sec
+  print(str(persec) + " txs/sec")
 
